@@ -32,9 +32,13 @@ var server = http.createServer(function(request, response){
 
 
   console.log('方方说：得到 HTTP 路径\n' + path)
-  console.log('方方说：查询字符串为\n' + query)
-  console.log('方方说：不含查询字符串的路径为\n' + pathNoQuery)
-
+  if(path === '/'){
+    response.write('hello')
+    response.end()
+  }else{
+    response.statusCode = 404
+    response.end()
+  }
 
 
 
