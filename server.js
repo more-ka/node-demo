@@ -3,16 +3,18 @@ var fs = require('fs')
 var url = require('url')
 var port = process.argv[2]
 
-if(!port){
+if (!port) {
   console.log('请指定端口号好不啦？\nnode server.js 8888 这样不会吗？')
   process.exit(1)
 }
 
-var server = http.createServer(function(request, response){
+var server = http.createServer(function (request, response) {
   var parsedUrl = url.parse(request.url, true)
-  var path = request.url 
+  var path = request.url
   var query = ''
-  if(path.indexOf('?') >= 0){ query = path.substring(path.indexOf('?')) }
+  if (path.indexOf('?') >= 0) {
+    query = path.substring(path.indexOf('?'))
+  }
   var pathNoQuery = parsedUrl.pathname
   var queryObject = parsedUrl.query
   var method = request.method
@@ -31,11 +33,25 @@ var server = http.createServer(function(request, response){
 
 
 
-  console.log('方方说：得到 HTTP 路径\n' + path)
-  if(path === '/'){
-    response.write('hello')
+  console.log('得到 HTTP 路径\n' + path)
+  if (path === '/index') {
+    response.setHeader('Content-Type','text/html')
+    response.write('<!DOCTYPE html><html lang="ZH-hans"><head><meta charset="UTF-8">'+
+    '<link rel="stylesheet" href="style"></head>'+
+    '<body><h1>你好</h1></body>'+
+    '<script src="script"></script></html>')
     response.end()
-  }else{
+  }
+  if (path === '/style') {
+    response.setHeader('Content-Type','text/css')
+    response.write('body{background:#ddd}h1{color: red}')
+    response.end()
+  }
+  if (path === '/script') {
+    response.setHeader('Content-Type','text/javascript')
+    response.write('alert("这是javascript控制的")')
+    response.end()
+  } else {
     response.statusCode = 404
     response.end()
   }
@@ -53,5 +69,3 @@ var server = http.createServer(function(request, response){
 
 server.listen(port)
 console.log('监听 ' + port + ' 成功\n请用在空中转体720度然后用电饭煲打开 http://localhost:' + port)
-
-
